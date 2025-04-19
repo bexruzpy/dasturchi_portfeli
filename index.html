@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Boynazarov Bexruz - Portfolio</title>
+  <link rel="stylesheet" href="style.css">
+  <style>
+
+body {
+  margin: 0;
+  padding: 0;
+  font-family: 'Segoe UI', sans-serif;
+  background: #f5f9ff;
+}
+
+.profile-card {
+  max-width: 800px;
+  margin: 40px auto;
+  background: #ffffff;
+  border-radius: 12px;
+  padding: 24px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+}
+
+.name {
+  text-align: center;
+  color: #2d4dcc;
+  margin-bottom: 12px;
+}
+
+.top-section {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 20px;
+}
+
+.info {
+  flex: 1;
+  min-width: 250px;
+}
+
+.image-and-links {
+  flex: 1;
+  text-align: center;
+}
+
+.avatar {
+  width: 140px;
+  height: 140px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 3px solid #d9e4f5;
+}
+
+.links {
+  margin-top: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.links a {
+  color: #0056b3;
+  text-decoration: none;
+}
+
+.role {
+  text-align: center;
+  margin: 24px 0;
+  color: #333;
+}
+
+.skills-section {
+  text-align: center;
+}
+
+.skills {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 12px;
+  margin-top: 16px;
+}
+
+.skill {
+  background: #eef3fd;
+  padding: 8px 16px;
+  border-radius: 8px;
+  font-size: 15px;
+}
+
+.tag {
+  font-size: 12px;
+  margin-left: 8px;
+  padding: 2px 6px;
+  border-radius: 4px;
+  color: white;
+}
+
+.fundamental {
+  background-color: #ffb347;
+}
+
+.intermediate {
+  background-color: #5dade2;
+}
+
+.advanced {
+  background-color: #9b59b6;
+}
+
+.expert {
+  background-color: #28a745;
+}
+
+  </style>
+</head>
+<body>
+  <div class="profile-card">
+    <h1 class="name">Boynazarov Bexruz</h1>
+
+    <div class="top-section">
+      <div class="info">
+        <p><strong>Yosh:</strong> 18 yosh</p>
+        <p><strong>Asosiy loyiha:</strong> projectsplatform.uz</p>
+        <p><strong>Joylashuv:</strong> Toshkent</p>
+        <p><strong>Loyihalar:</strong> 4 ta</p>
+        <p><strong>Muammolar yechimi:</strong> 200+</p>
+        <p><strong>Faoliyat:</strong> O‘zbekiston Milliy Universiteti, Amaliy matematika 1-kurs talabasi</p>
+        <p><strong>Tajriba:</strong> 4+ yil</p>
+      </div>
+
+      <div class="image-and-links">
+        <img src="your-photo.jpg" alt="Bexruz's Photo" class="avatar" />
+        <div class="links">
+          <a href="https://t.me/bexruzdeveloper" target="_blank">Telegram</a>
+          <a href="https://github.com/bexruzpy" target="_blank">GitHub</a>
+          <a href="https://linkedin.com/in/bexruzdeveloper" target="_blank">LinkedIn</a>
+        </div>
+      </div>
+    </div>
+
+    <h2 class="role">Software Engineer</h2>
+
+    <div class="skills-section">
+      <h3>Skills</h3>
+      <div class="skills">
+        <div class="skill">Html & CSS <span class="tag fundamental">Fundamental</span></div>
+        <div class="skill">Flutter <span class="tag intermediate">Intermediate</span></div>
+        <div class="skill">ReactJS <span class="tag advanced">Advanced</span></div>
+        <div class="skill">FastAPI <span class="tag expert">Expert</span></div>
+        <div class="skill">Django <span class="tag expert">Expert</span></div>
+        <div class="skill">Telegram Bot <span class="tag expert">Expert</span></div>
+      </div>
+    </div>
+  </div>
+</body>
+</html>
