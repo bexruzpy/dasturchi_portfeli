@@ -38,6 +38,8 @@ class UserCreate(BaseModel):
     fullname: str
     email: str
     phone_number: str
+    joylashuv: int
+    kasb: int
 
 class UserResponse(BaseModel):
     id: int
@@ -68,7 +70,9 @@ async def register(user: UserCreate, session: AsyncSession = Depends(get_async_s
         password=hash_password(user.password),
         fullname=user.fullname,
         email=user.email,
-        phone_number=user.phone_number
+        phone_number=user.phone_number,
+        position=user.joylashuv,
+        profession=user.kasb
     )
     session.add(new_user)
     await session.commit()

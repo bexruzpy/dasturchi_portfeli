@@ -1,19 +1,24 @@
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.future import select
-from models.models import User, Project
+from models.models import (
+    User,
+    Project,
+    Connection,
+    ConnectionType,
+    Skill,
+    ProblemAndAnswer
+)
 from database.database import get_async_session
 from pydantic import BaseModel
 from typing import List, Optional
+from sqlalchemy.orm import selectinload
+# Import for file responce
+from fastapi import Response
+import io
+
 
 router = APIRouter(tags=["Public Profile"])
-
-class PublicProject(BaseModel):
-    id: int
-    name: str
-    about_html: str
-    class Config:
-        orm_mode = True
 
 class PublicUserProfile(BaseModel):
     id: int
@@ -21,29 +26,131 @@ class PublicUserProfile(BaseModel):
     fullname: str
     cariere: Optional[str]
     email: Optional[str]
-    projects: List[PublicProject]
-
+    loyihalar: List[dict]
+    problems: List[dict]
+    joylashuv: str
+    kasb: str
+    connections: List[dict]
+    skills: List[dict]
     class Config:
         orm_mode = True
 
 @router.get("/@{username}", response_model=PublicUserProfile)
 async def view_public_profile(username: str, session: AsyncSession = Depends(get_async_session)):
-    result = await session.execute(select(User).where(User.username == username))
+    result = await session.execute(
+        select(User)
+        .options(selectinload(User.joylashuv))
+        .options(selectinload(User.kasb))
+        .where(User.username == username)
+    )
     user = result.scalars().first()
     if not user:
         raise HTTPException(status_code=404, detail="User not found")
 
-    # loyihalar idlari asosida olish
-    projects = []
-    if user.loyihalar:
-        result = await session.execute(select(Project).where(Project.id.in_(user.loyihalar)))
-        projects = result.scalars().all()
-
+    # connecionslarni sozlash
+    all_connnections = []
+    for connection_id in user.connections_list:
+        result = await session.execute(
+            select(Connection)
+            .options(selectinload(Connection.connection_type))
+            .where(Connection.id == connection_id)
+        )
+        connection = result.scalars().first()
+        if connection:
+            all_connnections.append(
+                connection.get_public_json()
+            )
+    # barcha skillarni olish
+    all_skills = []
+    for skill_id in user.skills or []:
+        result = await session.execute(
+            select(Skill)
+            .options(selectinload(Skill.skill_type))
+            .where(Skill.id == skill_id)
+        )
+        skill = result.scalars().first()
+        if skill:
+            all_skills.append(
+                skill.get_public_json()
+            )
+    # Barcha broject izohlarini olish 200
+    all_projects = []
+    for project_id in (user.loyihalar or []):
+        result = await session.execute(select(Project).where(Project.id == project_id))
+        project = result.scalars().first()
+        if project:
+            all_projects.append(
+                project.get_public_json(False)
+            )
+    for project_id in (user.startuplar or []):
+        result = await session.execute(select(Project).where(Project.id == project_id))
+        project = result.scalars().first()
+        if project:
+            all_projects.append(
+                project.get_public_json(True)
+            )
+    # Barcha poblema va unga yechimlarni olish
+    all_problems = []
+    for problem_id in user.solve_to_problems or []:
+        result = await session.execute(select(ProblemAndAnswer))
+        problem = result.scalars().first()
+        if problem:
+            all_problems.append(
+                problem.get_public_json()
+            )
     return {
         "id": user.id,
         "username": user.username,
         "fullname": user.fullname,
         "cariere": user.cariere,
         "email": user.email,
-        "projects": projects
+        "joylashuv": user.joylashuv.name,
+        "loyihalar": all_projects,
+        "problems": all_problems,
+        "kasb": user.kasb.name,
+        "connections": all_connnections,
+        "skills": all_skills
     }
+# Profile image get api
+@router.get("/@{username}/avatar")
+async def get_profile_image(username: str, session: AsyncSession = Depends(get_async_session)):
+    result = await session.execute(select(User).where(User.username == username))
+    user = result.scalars().first()
+    if not user:
+        raise HTTPException(status_code=404, detail="User not found")
+    # user.profile_image : bytes
+    return Response(content=user.profile_image, media_type="image/png")
+
+# Connection types icons
+@router.get("/connection_types/{type_id}")
+async def get_connection_types(type_id: int, session: AsyncSession = Depends(get_async_session)):
+    result = await session.execute(select(ConnectionType).where(ConnectionType.id == type_id))
+    return Response(content=result.scalars().first().icon, media_type="image/png")
+
+
+@router.get("/project/{project_id}/about")
+async def get_project_about(project_id: int, session: AsyncSession = Depends(get_async_session)):
+    result = await session.execute(select(Project).where(Project.id == project_id))
+    project = result.scalars().first()
+    if not project:
+        raise HTTPException(status_code=404, detail="Project not found")
+    return Response(content=project.about_html, media_type="text/html")
+
+@router.get("/problem/{project_id}/about")
+async def get_project_about(project_id: int, session: AsyncSession = Depends(get_async_session)):
+    result = await session.execute(select(ProblemAndAnswer).where(ProblemAndAnswer.id == project_id))
+    problem = result.scalars().first()
+    if not problem:
+        raise HTTPException(status_code=404, detail="Problem not found")
+    return Response(content=problem.problem, media_type="text/html")
+
+@router.get("/problem/{project_id}/code")
+async def get_project_about(project_id: int, session: AsyncSession = Depends(get_async_session)):
+    result = await session.execute(
+        select(ProblemAndAnswer)
+        .options(selectinload(ProblemAndAnswer.language_ref))
+        .where(ProblemAndAnswer.id == project_id))
+    problem = result.scalars().first()
+    if not problem:
+        raise HTTPException(status_code=404, detail="Problem not found")
+    return problem.get_code_json()

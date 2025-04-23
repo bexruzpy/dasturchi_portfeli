@@ -1,4 +1,4 @@
-from sqlalchemy import Column, Integer, String, ForeignKey, Text, JSON, LargeBinary, Boolean
+from sqlalchemy import Column, Integer, String, ForeignKey, Text, JSON, LargeBinary, Boolean, DATE, Time
 from sqlalchemy.orm import declarative_base, relationship
 
 Base = declarative_base()
@@ -24,8 +24,26 @@ class Skill(Base):
     type = Column(Integer, ForeignKey("skill_types.id"))
     grade = Column(Integer)
     bio = Column(String)
-    skill_type = relationship("SkillType")
+    skill_type = relationship("SkillType", foreign_keys=[type])
     user = relationship("User", foreign_keys=[user_id])
+    def get_public_json(self):
+        degrees = {
+            1: "Fundamental",
+            2: "Intermediate",
+            3: "Advanced",
+            4: "Expert"
+        }
+        if self.skill_type.be_grade:
+            return {
+                "begrade": self.skill_type.be_grade,
+                "name": self.skill_type.name,
+                "bio": degrees[self.grade]
+            }
+        return {
+            "begrade": self.skill_type.be_grade,
+            "name": self.skill_type.name,
+            "bio": self.bio
+        }
 
 
 class ConnectionType(Base):
@@ -33,6 +51,7 @@ class ConnectionType(Base):
     id = Column(Integer, primary_key=True, index=True)
     name = Column(String)
     datas = Column(JSON)
+    url_format = Column(String)
     icon = Column(LargeBinary)
 
 
@@ -40,13 +59,23 @@ class Connection(Base):
     __tablename__ = "connections"
     id = Column(Integer, primary_key=True, index=True)
     type = Column(Integer, ForeignKey("connection_types.id"))
-    name = Column(String)
     datas = Column(JSON)
     connection_type = relationship("ConnectionType")
+    def get_public_json(self):
+        res = self.connection_type.url_format
+        for key in self.datas:
+            res = res.replace("{"+key+"}", self.datas[key])
+        return {
+            "type_id": self.connection_type.id,
+            "datas": self.datas,
+            "url": res,
+            "name": self.connection_type.name
+        }
 
 
 class Project(Base):
     __tablename__ = "projects"
+
     id = Column(Integer, primary_key=True, index=True)
     user_id = Column(Integer, ForeignKey("users.id"))
     name = Column(String)
@@ -54,19 +83,48 @@ class Project(Base):
     about_html = Column(Text)
     files = Column(JSON)
     result = Column(LargeBinary)
-    user = relationship("User", foreign_keys=[user_id])
 
+    user = relationship("User", foreign_keys=[user_id])
+    def get_public_json(self, be_startup):
+        return {
+            "id": self.id,
+            "name": self.name,
+            "about_text": self.about_text,
+            "be_startup": be_startup
+        }
 
 class ProblemAndAnswer(Base):
     __tablename__ = "problem_and_answer"
     id = Column(Integer, primary_key=True, index=True)
     user_id = Column(Integer, ForeignKey("users.id"))
-    problem = Column(Text)
-    answer = Column(Text)
+    name = Column(Text)
+    problem = Column(Text) # Html
+    answer = Column(Text) # Code text
     language = Column(Integer, ForeignKey("languages.id"))
     language_ref = relationship("Language")
     owner = relationship("User", foreign_keys=[user_id])
+    def get_public_json(self):
+        return {
+            "id": self.id,
+            "name": self.name 
+        }
+    def get_code_json(self):
+        return {
+            "code_text": self.answer,
+            "language_name": self.language_ref.name,
+            "key_code": self.language_ref.view_key
+        }
 
+class Joylashuv(Base):
+    __tablename__ = "joylashuvlar"
+    id = Column(Integer, primary_key=True, index=True)
+    name = Column(Text, unique=True)
+
+
+class Profession(Base):
+    __tablename__ = "professions"
+    id = Column(Integer, primary_key=True, index=True)
+    name = Column(String, unique=True)
 
 class User(Base):
     __tablename__ = "users"
@@ -74,7 +132,7 @@ class User(Base):
     username = Column(String, unique=True, index=True)
     password = Column(String)
     fullname = Column(String)
-    connects = Column(JSON)  # IDs of connections
+    connections_list = Column(JSON)  # IDs of connections
     loyihalar = Column(JSON)  # IDs of projects
     startuplar = Column(JSON)  # IDs of startup-type projects
     asosiy_loyiha = Column(Integer, ForeignKey("projects.id"))
@@ -82,7 +140,13 @@ class User(Base):
     solve_to_problems = Column(JSON)  # IDs of problem_and_answer
     skills = Column(JSON)  # IDs of skills
     profile_image = Column(LargeBinary)
-    email = Column(String)
+    email = Column(String, unique=True)
     phone_number = Column(String)
+    position = Column(Integer, ForeignKey("joylashuvlar.id"))
+    profession = Column(Integer, ForeignKey("professions.id"))
+    birth_day = Column(Time)
 
+    joylashuv = relationship("Joylashuv", foreign_keys=[position])
     asosiy_loyiha_ref = relationship("Project", foreign_keys=[asosiy_loyiha])
+    kasb = relationship("Profession", foreign_keys=[profession])
+
