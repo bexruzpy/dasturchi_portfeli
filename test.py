@@ -1,6 +1,6 @@
 import asyncio
 import logging
-from crud import add_skill_type, add_language, add_connection_type
+from crud import add_skill_type, add_language, add_connection_type, add_profession
 
 # SQLAlchemy log darajasini pasaytirish
 logging.getLogger("sqlalchemy.engine").setLevel(logging.WARNING)
@@ -99,9 +99,74 @@ async def add_all_connection_types():
             print(f"❌ Error: {name} ({str(e)})")
 
     print(f"\n🔚 Jami qo‘shilgan connection_types soni: {total_added}")
+jobs = [
+    "Backend Developer",
+    "Frontend Developer",
+    "Fullstack Developer",
+    "Mobile Developer",
+    "UI/UX Designer",
+    "Product Designer",
+    "Web Developer",
+    "Software Engineer",
+    "Data Analyst",
+    "Data Scientist",
+    "Machine Learning Engineer",
+    "AI Engineer",
+    "DevOps Engineer",
+    "Site Reliability Engineer",
+    "Cybersecurity Analyst",
+    "Penetration Tester",
+    "Security Engineer",
+    "Cloud Engineer",
+    "Cloud Architect",
+    "Database Administrator",
+    "Big Data Engineer",
+    "System Administrator",
+    "Network Engineer",
+    "QA Engineer",
+    "Test Automation Engineer",
+    "Game Developer",
+    "VR/AR Developer",
+    "Embedded Systems Engineer",
+    "IoT Developer",
+    "Blockchain Developer",
+    "Smart Contract Developer",
+    "Technical Writer",
+    "IT Support Specialist",
+    "Technical Support Engineer",
+    "IT Project Manager",
+    "Product Manager",
+    "Scrum Master",
+    "Agile Coach",
+    "Business Analyst",
+    "Solutions Architect",
+    "IT Consultant",
+    "Machine Learning Researcher",
+    "Natural Language Processing Engineer",
+    "Computer Vision Engineer",
+    "Bioinformatics Developer",
+    "Robotics Engineer",
+    "Ethical Hacker",
+    "Frontend Architect",
+    "Backend Architect",
+    "Software Architect",
+]
+
+async def add_all_jobs():
+    total_added = 0
+    for name in set(jobs):
+        try:
+            await add_profession(name=name)
+            print(f"✅ Added: {name}")
+            total_added += 1
+        except Exception as e:
+            print(f"⚠️  Skipped: {name} ({str(e)})")
+
 
 # Ishga tushurish
 if __name__ == "__main__":
     asyncio.run(add_all_skill_types())
     asyncio.run(add_all_languages())
     asyncio.run(add_all_connection_types())
+    asyncio.run(add_all_jobs())
+
