@@ -21,11 +21,21 @@ class ProjectOut(ProjectCreate):
     class Config:
         orm_mode = True
 
-@router.post("/", response_model=ProjectOut)
+@router.post("/startup", response_model=ProjectOut)
 async def create_project(project: ProjectCreate, session: AsyncSession = Depends(get_async_session),
         current_user=Depends(get_current_user)):
     new_project = Project(**project.dict(), user_id=current_user.id)
     session.add(new_project)
+    current_user.startuplar.append(new_project)
+    await session.commit()
+    await session.refresh(new_project)
+    return new_project
+@router.post("/loyiha", response_model=ProjectOut)
+async def create_project(project: ProjectCreate, session: AsyncSession = Depends(get_async_session),
+        current_user=Depends(get_current_user)):
+    new_project = Project(**project.dict(), user_id=current_user.id)
+    session.add(new_project)
+    current_user.loyihalar.append(new_project)
     await session.commit()
     await session.refresh(new_project)
     return new_project

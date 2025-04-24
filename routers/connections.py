@@ -26,6 +26,7 @@ async def add_connection(
 ):
     conn = Connection(**data.dict())
     session.add(conn)
+    current_user.connections.append(conn.id)
     await session.commit()
     await session.refresh(conn)
     return conn
