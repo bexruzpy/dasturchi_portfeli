@@ -26,6 +26,8 @@ async def add_connection(
 ):
     conn = Connection(**data.dict())
     session.add(conn)
+    if current_user.connections is None:
+        current_user.connections = []
     current_user.connections.append(conn.id)
     await session.commit()
     await session.refresh(conn)

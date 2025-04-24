@@ -28,6 +28,8 @@ async def create_skill(
 ):
     new_skill = Skill(**skill.dict(), user_id=current_user.id)
     session.add(new_skill)
+    if current_user.skills is None:
+        current_user.skills = []
     current_user.skills.append(new_skill)
     await session.commit()
     await session.refresh(new_skill)

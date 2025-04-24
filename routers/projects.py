@@ -26,6 +26,8 @@ async def create_project(project: ProjectCreate, session: AsyncSession = Depends
         current_user=Depends(get_current_user)):
     new_project = Project(**project.dict(), user_id=current_user.id)
     session.add(new_project)
+    if current_user.startuplar is None:
+        current_user.startuplar = []
     current_user.startuplar.append(new_project)
     await session.commit()
     await session.refresh(new_project)
@@ -35,6 +37,8 @@ async def create_project(project: ProjectCreate, session: AsyncSession = Depends
         current_user=Depends(get_current_user)):
     new_project = Project(**project.dict(), user_id=current_user.id)
     session.add(new_project)
+    if current_user.loyihalar is None:
+        current_user.loyihalar = []
     current_user.loyihalar.append(new_project)
     await session.commit()
     await session.refresh(new_project)
