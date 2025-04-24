@@ -11,8 +11,7 @@ router = APIRouter(prefix="/connections", tags=["Connections"])
 
 class ConnectionCreate(BaseModel):
     type: int
-    name: str
-    datas: Dict[str, Any]
+    datas: Dict[str, str]
 
 class ConnectionOut(ConnectionCreate):
     id: int
