@@ -1,4 +1,4 @@
-from sqlalchemy import Column, Integer, String, ForeignKey, Text, JSON, LargeBinary, Boolean, DATE, Time
+from sqlalchemy import Column, Integer, String, ForeignKey, Text, JSON, LargeBinary, Boolean, DATE, DateTime
 from sqlalchemy.orm import declarative_base, relationship
 
 Base = declarative_base()
@@ -106,7 +106,7 @@ class ProblemAndAnswer(Base):
     def get_public_json(self):
         return {
             "id": self.id,
-            "name": self.name 
+            "name": self.name
         }
     def get_code_json(self):
         return {
@@ -135,7 +135,7 @@ class User(Base):
     connections_list = Column(JSON)  # IDs of connections
     loyihalar = Column(JSON)  # IDs of projects
     startuplar = Column(JSON)  # IDs of startup-type projects
-    asosiy_loyiha = Column(Integer, ForeignKey("projects.id"))
+    asosiy_loyiha = Column(String) # Loyiha nomi yoki sayt linki misol projectsplatform.uz
     cariere = Column(Text)  # HTML content
     solve_to_problems = Column(JSON)  # IDs of problem_and_answer
     skills = Column(JSON)  # IDs of skills
@@ -144,9 +144,10 @@ class User(Base):
     phone_number = Column(String)
     position = Column(Integer, ForeignKey("joylashuvlar.id"))
     profession = Column(Integer, ForeignKey("professions.id"))
-    birth_day = Column(Time)
+    experience = Column(String)
+    birth_day = Column(DateTime(timezone=False))
+    hozirgi_faoliyat = Column(String) # Ayni payda shug'ullanayotgan ish faoliyati
 
     joylashuv = relationship("Joylashuv", foreign_keys=[position])
-    asosiy_loyiha_ref = relationship("Project", foreign_keys=[asosiy_loyiha])
     kasb = relationship("Profession", foreign_keys=[profession])
 

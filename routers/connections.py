@@ -3,7 +3,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.future import select
 from pydantic import BaseModel
 from typing import List, Optional, Dict, Any
-from models.models import Connection
+from models.models import Connection, ConnectionType
 from database.database import get_async_session
 from dependencies.auth import get_current_user
 
@@ -38,3 +38,24 @@ async def list_connections(
 ):
     result = await session.execute(select(Connection))
     return result.scalars().all()
+
+
+# Connection type create
+class ConnectionTypeCreate(BaseModel):
+    id: int
+    name: str
+    datas: dict
+
+class ConnectionTypeOut(ConnectionTypeCreate):
+    id: int
+    class Config:
+        orm_mode = True
+# Connection all types
+
+@router.get("/AllConnectionTypes", response_model=List[ConnectionTypeOut])
+async def get_all_languages(
+    session: AsyncSession = Depends(get_async_session)
+):
+    result = await session.execute(select(ConnectionType))
+    return result.scalars().all()
+

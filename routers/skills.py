@@ -28,18 +28,10 @@ async def create_skill(
 ):
     new_skill = Skill(**skill.dict(), user_id=current_user.id)
     session.add(new_skill)
+    current_user.skills.append(new_skill)
     await session.commit()
     await session.refresh(new_skill)
     return new_skill
-
-@router.get("/", response_model=List[SkillOut])
-async def get_all_skills(
-    session: AsyncSession = Depends(get_async_session),
-    current_user=Depends(get_current_user)
-):
-    result = await session.execute(select(Skill))
-    return result.scalars().all()
-
 
 
 
@@ -59,8 +51,7 @@ class SkillTypeOut(SkillTypeCreate):
 
 @router.get("/types", response_model=List[SkillTypeOut])
 async def get_all_skill_types(
-    session: AsyncSession = Depends(get_async_session),
-    current_user=Depends(get_current_user)
+    session: AsyncSession = Depends(get_async_session)
 ):
     result = await session.execute(select(SkillType))
     return result.scalars().all()

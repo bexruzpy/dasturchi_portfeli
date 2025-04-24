@@ -13,6 +13,7 @@ from database.database import get_async_session
 from pydantic import BaseModel
 from typing import List, Optional
 from sqlalchemy.orm import selectinload
+from datetime import datetime
 # Import for file responce
 from fastapi import Response
 import io
@@ -24,7 +25,8 @@ class PublicUserProfile(BaseModel):
     id: int
     username: str
     fullname: str
-    cariere: Optional[str]
+    hozirgi_faoliyat: str
+    age: int
     email: Optional[str]
     loyihalar: List[dict]
     problems: List[dict]
@@ -32,6 +34,8 @@ class PublicUserProfile(BaseModel):
     kasb: str
     connections: List[dict]
     skills: List[dict]
+    asosiy_loyiha: str
+    experience: str
     class Config:
         orm_mode = True
 
@@ -75,13 +79,6 @@ async def view_public_profile(username: str, session: AsyncSession = Depends(get
             )
     # Barcha broject izohlarini olish 200
     all_projects = []
-    for project_id in (user.loyihalar or []):
-        result = await session.execute(select(Project).where(Project.id == project_id))
-        project = result.scalars().first()
-        if project:
-            all_projects.append(
-                project.get_public_json(False)
-            )
     for project_id in (user.startuplar or []):
         result = await session.execute(select(Project).where(Project.id == project_id))
         project = result.scalars().first()
@@ -89,27 +86,41 @@ async def view_public_profile(username: str, session: AsyncSession = Depends(get
             all_projects.append(
                 project.get_public_json(True)
             )
+    for project_id in (user.loyihalar or []):
+        result = await session.execute(select(Project).where(Project.id == project_id))
+        project = result.scalars().first()
+        if project:
+            all_projects.append(
+                project.get_public_json(False)
+            )
     # Barcha poblema va unga yechimlarni olish
     all_problems = []
     for problem_id in user.solve_to_problems or []:
-        result = await session.execute(select(ProblemAndAnswer))
+        result = await session.execute(
+            select(ProblemAndAnswer)
+            .where(ProblemAndAnswer.id == problem_id)
+        )
         problem = result.scalars().first()
         if problem:
             all_problems.append(
                 problem.get_public_json()
             )
+    print((datetime.now() - user.birth_day).days // 365)
     return {
         "id": user.id,
         "username": user.username,
         "fullname": user.fullname,
-        "cariere": user.cariere,
+        "age": (datetime.now() - user.birth_day).days // 365,
         "email": user.email,
         "joylashuv": user.joylashuv.name,
         "loyihalar": all_projects,
         "problems": all_problems,
         "kasb": user.kasb.name,
         "connections": all_connnections,
-        "skills": all_skills
+        "skills": all_skills,
+        "asosiy_loyiha": user.asosiy_loyiha,
+        "hozirgi_faoliyat": user.hozirgi_faoliyat,
+        "experience": user.experience
     }
 # Profile image get api
 @router.get("/@{username}/avatar")
@@ -120,6 +131,16 @@ async def get_profile_image(username: str, session: AsyncSession = Depends(get_a
         raise HTTPException(status_code=404, detail="User not found")
     # user.profile_image : bytes
     return Response(content=user.profile_image, media_type="image/png")
+# Profile cariere html
+@router.get("/{username}/cariere")
+async def get_project_about(username: str, session: AsyncSession = Depends(get_async_session)):
+    result = await session.execute(select(User).where(User.username == username))
+    user = result.scalars().first()
+    if not user:
+        raise HTTPException(status_code=404, detail="User not found")
+    return Response(content=user.cariere, media_type="text/html")
+
+
 
 # Connection types icons
 @router.get("/connection_types/{type_id}")
