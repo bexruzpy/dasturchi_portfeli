@@ -1,6 +1,6 @@
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.future import select
-from models.models import User, Project, Skill, SkillType, Language, ConnectionType, Profession
+from models.models import User, Project, Skill, SkillType, Language, ConnectionType, Profession, Joylashuv
 from passlib.context import CryptContext
 from database.database import async_session
 
@@ -95,3 +95,12 @@ async def add_profession(name: str, session: AsyncSession = async_session()):
     await session.commit()
     await session.refresh(new_profession)
     return new_profession
+
+# ==== JOYLAHUV ===
+
+async def add_joylashuv(name: str, session: AsyncSession = async_session()):
+    new_joylashuv = Joylashuv(name=name)
+    session.add(new_joylashuv)
+    await session.commit()
+    await session.refresh(new_joylashuv)
+    return new_joylashuv

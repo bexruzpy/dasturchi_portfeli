@@ -1,6 +1,6 @@
 import asyncio
 import logging
-from crud import add_skill_type, add_language, add_connection_type, add_profession
+from crud import add_skill_type, add_language, add_connection_type, add_profession, add_joylashuv
 
 # SQLAlchemy log darajasini pasaytirish
 logging.getLogger("sqlalchemy.engine").setLevel(logging.WARNING)
@@ -162,11 +162,40 @@ async def add_all_jobs():
         except Exception as e:
             print(f"⚠️  Skipped: {name} ({str(e)})")
 
+joylashuvlar = [
+    "Toshkent",
+    "Samarqand",
+    "Andijon",
+    "Buxoro",
+    "Jizzax",
+    "Farg'ona",
+    "Namangan",
+    "Navoiy",
+    "Qashqadaryo",
+    "Qoraqalpoqiston",
+    "Sirdaryo",
+    "Surxondaryo",
+    "Toshkent viloyati",
+]
+
+async def add_all_joylashuvlar():
+    total_added = 0
+    for name in set(joylashuvlar):
+        try:
+            await add_joylashuv(name=name)
+            print(f"✅ Added: {name}")
+            total_added += 1
+        except Exception as e:
+            print(f"⚠️  Skipped: {name} ({str(e)})")
+
+    print(f"\n🔚 Yangi qo‘shilgan joylashuvlar soni: {total_added}")
+
 
 # Ishga tushurish
 if __name__ == "__main__":
-    asyncio.run(add_all_skill_types())
-    asyncio.run(add_all_languages())
-    asyncio.run(add_all_connection_types())
-    asyncio.run(add_all_jobs())
+    # asyncio.run(add_all_skill_types())
+    # asyncio.run(add_all_languages())
+    # asyncio.run(add_all_connection_types())
+    # asyncio.run(add_all_jobs())
+    asyncio.run(add_all_joylashuvlar())
 
