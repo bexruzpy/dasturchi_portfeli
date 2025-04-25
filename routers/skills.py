@@ -83,8 +83,22 @@ async def get_all_languages(
     result = await session.execute(select(Language))
     return result.scalars().all()
 
+
+
+
+
+
+# Professions type create
+class ProfessionCreate(BaseModel):
+    id: int
+    name: str
+
+class ProfessionOut(ProfessionCreate):
+    id: int
+    class Config:
+        orm_mode = True
 # Get all professions
-@router.get("/AllProfessions", response_model=List[Profession])
+@router.get("/AllProfessions", response_model=List[ProfessionOut])
 async def get_all_professions(
     session: AsyncSession = Depends(get_async_session)
 ):
