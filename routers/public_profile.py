@@ -7,7 +7,8 @@ from models.models import (
     Connection,
     ConnectionType,
     Skill,
-    ProblemAndAnswer
+    ProblemAndAnswer,
+    Joylashuv
 )
 from database.database import get_async_session
 from pydantic import BaseModel
@@ -175,3 +176,22 @@ async def get_project_about(project_id: int, session: AsyncSession = Depends(get
     if not problem:
         raise HTTPException(status_code=404, detail="Problem not found")
     return problem.get_code_json()
+
+
+
+# Joylashuvlar type create
+class JoylashuvCreate(BaseModel):
+    id: int
+    name: str
+
+class JoylashuvOut(JoylashuvCreate):
+    id: int
+    class Config:
+        orm_mode = True
+# Get all Joylashuvlar
+@router.get("/AllJoylashuvlar", response_model=List[JoylashuvOut])
+async def get_all_professions(
+    session: AsyncSession = Depends(get_async_session)
+):
+    result = await session.execute(select(Joylashuv))
+    return result.scalars().all()
