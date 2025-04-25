@@ -1,9 +1,9 @@
 from sqlalchemy.ext.asyncio import AsyncSession
-from sqlalchemy.future import select
+from sqlalchemy import select, update
 from models.models import User, Project, Skill, SkillType, Language, ConnectionType, Profession, Joylashuv
 from passlib.context import CryptContext
 from database.database import async_session
-
+from database import get_async_session
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 
 # ==== USER ====
@@ -87,8 +87,22 @@ async def add_connection_type(name: str, datas: dict = {}, icon: bytes = None):
         await session.commit()
         await session.refresh(new_type)
         return new_type
-# ==== PROFESSION ===
+async def update_connection_type_url(name: str, url_format: str):
+    async with get_async_session() as session:
+        result = await session.execute(select(ConnectionType).where(ConnectionType.name == name))
+        conn_type = result.scalars().first()
+        if conn_type:
+            await session.execute(
+                update(ConnectionType)
+                .where(ConnectionType.id == conn_type.id)
+                .values(url_format=url_format)
+            )
+            await session.commit()
+            return True
+        return False
 
+
+# ==== PROFESSION ===
 async def add_profession(name: str, session: AsyncSession = async_session()):
     new_profession = Profession(name=name)
     session.add(new_profession)
@@ -96,8 +110,7 @@ async def add_profession(name: str, session: AsyncSession = async_session()):
     await session.refresh(new_profession)
     return new_profession
 
-# ==== JOYLAHUV ===
-
+# ==== JOYLASHUV ===
 async def add_joylashuv(name: str, session: AsyncSession = async_session()):
     new_joylashuv = Joylashuv(name=name)
     session.add(new_joylashuv)

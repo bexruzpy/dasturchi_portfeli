@@ -99,6 +99,35 @@ async def add_all_connection_types():
             print(f"❌ Error: {name} ({str(e)})")
 
     print(f"\n🔚 Jami qo‘shilgan connection_types soni: {total_added}")
+# URL formatlari har bir platforma uchun
+url_formats = {
+    "GitHub": "https://github.com/{username}",
+    "Telegram": "https://t.me/{username}",
+    "LinkedIn": "https://linkedin.com/in/{username}",
+    "Facebook": "https://facebook.com/{username}",
+    "Instagram": "https://instagram.com/{username}",
+    "Twitter": "https://twitter.com/{username}",
+    "YouTube": "https://youtube.com/@{username}",
+    "Upwork": "https://www.upwork.com/freelancers/~{username}",
+    "Fiverr": "https://www.fiverr.com/{username}",
+}
+
+# Asinxron update funksiyasi
+async def update_all_url_formats():
+    total_updated = 0
+    for name, url_format in url_formats.items():
+        try:
+            result = await update_connection_type_url(name=name, url_format=url_format)
+            if result is True:
+                print(f"✅ Updated: {name}")
+                total_updated += 1
+            else:
+                print(f"⚠️ Skipped or not found: {name}")
+        except Exception as e:
+            print(f"❌ Error updating {name}: {str(e)}")
+
+    print(f"\n🔚 Jami yangilangan connection_types soni: {total_updated}")
+
 jobs = [
     "Backend Developer",
     "Frontend Developer",
