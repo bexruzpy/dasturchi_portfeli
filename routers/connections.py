@@ -24,11 +24,11 @@ async def add_connection(
     session: AsyncSession = Depends(get_async_session),
     current_user=Depends(get_current_user)
 ):
-    conn = Connection(**data.dict())
+    conn = Connection(**data.dict(), user_id=current_user.id)
     session.add(conn)
-    if current_user.connections is None:
-        current_user.connections = []
-    current_user.connections.append(conn.id)
+    if current_user.connections_list is None:
+        current_user.connections_list = []
+    current_user.connections_list.append(conn.id)
     await session.commit()
     await session.refresh(conn)
     return conn

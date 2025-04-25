@@ -58,8 +58,10 @@ class ConnectionType(Base):
 class Connection(Base):
     __tablename__ = "connections"
     id = Column(Integer, primary_key=True, index=True)
+    user_id = Column(Integer, ForeignKey("users.id"))
     type = Column(Integer, ForeignKey("connection_types.id"))
     datas = Column(JSON)
+    user = relationship("User", foreign_keys=[user_id])
     connection_type = relationship("ConnectionType")
     def get_public_json(self):
         res = self.connection_type.url_format
