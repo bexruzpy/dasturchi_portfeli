@@ -3,7 +3,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.future import select
 from pydantic import BaseModel
 from typing import Optional, List
-from models.models import Skill, SkillType, Language
+from models.models import Skill, SkillType, Language, Profession
 from database.database import get_async_session
 from dependencies.auth import get_current_user
 
@@ -79,7 +79,15 @@ class LanguageOut(LanguageCreate):
 @router.get("/AllProgrammingLanguages", response_model=List[LanguageOut])
 async def get_all_languages(
     session: AsyncSession = Depends(get_async_session),
-    current_user=Depends(get_current_user)
 ):
     result = await session.execute(select(Language))
+    return result.scalars().all()
+
+# Get all professions
+
+@router.get("/AllProfessions", response_model=List[Profession])
+async def get_all_professions(
+    session: AsyncSession = Depends(get_async_session),
+):
+    result = await session.execute(select(Profession))
     return result.scalars().all()
