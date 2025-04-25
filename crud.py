@@ -87,7 +87,7 @@ async def add_connection_type(name: str, datas: dict = {}, icon: bytes = None):
         await session.refresh(new_type)
         return new_type
 async def update_connection_type_url(name: str, url_format: str):
-    async with get_async_session() as session:
+    async for session in get_async_session():
         result = await session.execute(select(ConnectionType).where(ConnectionType.name == name))
         conn_type = result.scalars().first()
         if conn_type:
@@ -99,6 +99,7 @@ async def update_connection_type_url(name: str, url_format: str):
             await session.commit()
             return True
         return False
+
 
 
 # ==== PROFESSION ===
