@@ -33,15 +33,6 @@ async def add_connection(
     await session.refresh(conn)
     return conn
 
-@router.get("/", response_model=List[ConnectionOut])
-async def list_connections(
-    session: AsyncSession = Depends(get_async_session),
-    current_user=Depends(get_current_user)
-):
-    result = await session.execute(select(Connection))
-    return result.scalars().all()
-
-
 # Connection type create
 class ConnectionTypeCreate(BaseModel):
     id: int
