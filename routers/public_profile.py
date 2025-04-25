@@ -53,7 +53,7 @@ async def view_public_profile(username: str, session: AsyncSession = Depends(get
 
     # connecionslarni sozlash
     all_connnections = []
-    for connection_id in user.connections_list:
+    for connection_id in user.connections_list or []:
         result = await session.execute(
             select(Connection)
             .options(selectinload(Connection.connection_type))
