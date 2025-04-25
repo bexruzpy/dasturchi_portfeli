@@ -30,7 +30,7 @@ async def create_skill(
     session.add(new_skill)
     if current_user.skills is None:
         current_user.skills = []
-    current_user.skills.append(new_skill)
+    current_user.skills.append(new_skill.id)
     await session.commit()
     await session.refresh(new_skill)
     return new_skill

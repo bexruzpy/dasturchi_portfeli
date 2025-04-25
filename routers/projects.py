@@ -28,7 +28,7 @@ async def create_project(project: ProjectCreate, session: AsyncSession = Depends
     session.add(new_project)
     if current_user.startuplar is None:
         current_user.startuplar = []
-    current_user.startuplar.append(new_project)
+    current_user.startuplar.append(new_project.id)
     await session.commit()
     await session.refresh(new_project)
     return new_project
@@ -39,7 +39,7 @@ async def create_project(project: ProjectCreate, session: AsyncSession = Depends
     session.add(new_project)
     if current_user.loyihalar is None:
         current_user.loyihalar = []
-    current_user.loyihalar.append(new_project)
+    current_user.loyihalar.append(new_project.id)
     await session.commit()
     await session.refresh(new_project)
     return new_project
