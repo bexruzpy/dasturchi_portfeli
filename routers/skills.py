@@ -10,7 +10,7 @@ from dependencies.auth import get_current_user
 router = APIRouter(prefix="/skills", tags=["Skills"])
 # Scill create
 class SkillCreate(BaseModel):
-    type: int
+    type: Optional[int] = None
     grade: Optional[int] = None
     bio: Optional[str] = None
 
