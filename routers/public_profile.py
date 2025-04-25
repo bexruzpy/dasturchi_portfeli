@@ -118,9 +118,9 @@ async def view_public_profile(username: str, session: AsyncSession = Depends(get
         "kasb": user.kasb.name,
         "connections": all_connnections,
         "skills": all_skills,
-        "asosiy_loyiha": user.asosiy_loyiha,
-        "hozirgi_faoliyat": user.hozirgi_faoliyat,
-        "experience": user.experience
+        "asosiy_loyiha": user.asosiy_loyiha or "",
+        "hozirgi_faoliyat": user.hozirgi_faoliyat or "",
+        "experience": user.experience or ""
     }
 # Profile image get api
 @router.get("/@{username}/avatar")
