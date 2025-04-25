@@ -1,6 +1,6 @@
 import asyncio
 import logging
-from crud import add_skill_type, add_language, add_connection_type, add_profession, add_joylashuv
+from crud import add_skill_type, add_language, add_connection_type, add_profession, add_joylashuv, update_connection_type_url
 
 # SQLAlchemy log darajasini pasaytirish
 logging.getLogger("sqlalchemy.engine").setLevel(logging.WARNING)
@@ -226,5 +226,7 @@ if __name__ == "__main__":
     # asyncio.run(add_all_languages())
     # asyncio.run(add_all_connection_types())
     # asyncio.run(add_all_jobs())
-    asyncio.run(add_all_joylashuvlar())
+    # asyncio.run(add_all_joylashuvlar())
+    asyncio.run(update_all_url_formats())
+
 
