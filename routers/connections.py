@@ -31,6 +31,7 @@ async def add_connection(
     current_user.connections_list.append(conn.id)
     await session.commit()
     await session.refresh(conn)
+    await session.refresh(current_user)
     return conn
 
 # Connection type create
