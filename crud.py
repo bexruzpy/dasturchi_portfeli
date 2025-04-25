@@ -2,8 +2,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy import select, update
 from models.models import User, Project, Skill, SkillType, Language, ConnectionType, Profession, Joylashuv
 from passlib.context import CryptContext
-from database.database import async_session
-from database import get_async_session
+from database.database import async_session, get_async_session
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 
 # ==== USER ====
