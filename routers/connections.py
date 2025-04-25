@@ -33,6 +33,7 @@ async def add_connection(
         current_user.connections_list = []
 
     current_user.connections_list.append(conn.id)
+    session.add(current_user)
     await session.commit()
 
     return conn
