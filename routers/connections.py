@@ -32,10 +32,8 @@ async def add_connection(
     if current_user.connections_list is None:
         current_user.connections_list = []
 
-    current_user.connections_list.append(conn.id)
-    session.add(current_user)
+    setattr(current_user, "connections_list", current_user.connections_list+[conn.id])
     await session.commit()
-
     return conn
 
 
