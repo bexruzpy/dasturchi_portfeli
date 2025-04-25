@@ -78,16 +78,15 @@ class LanguageOut(LanguageCreate):
 
 @router.get("/AllProgrammingLanguages", response_model=List[LanguageOut])
 async def get_all_languages(
-    session: AsyncSession = Depends(get_async_session),
+    session: AsyncSession = Depends(get_async_session)
 ):
     result = await session.execute(select(Language))
     return result.scalars().all()
 
 # Get all professions
-
 @router.get("/AllProfessions", response_model=List[Profession])
 async def get_all_professions(
-    session: AsyncSession = Depends(get_async_session),
+    session: AsyncSession = Depends(get_async_session)
 ):
     result = await session.execute(select(Profession))
     return result.scalars().all()
