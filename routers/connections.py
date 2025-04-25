@@ -17,7 +17,6 @@ class ConnectionOut(ConnectionCreate):
     id: int
     class Config:
         orm_mode = True
-
 @router.post("/", response_model=ConnectionOut)
 async def add_connection(
     data: ConnectionCreate,
@@ -26,13 +25,18 @@ async def add_connection(
 ):
     conn = Connection(**data.dict(), user_id=current_user.id)
     session.add(conn)
-    if current_user.connections_list is None:
-        current_user.connections_list = []
-    current_user.connections_list.append(conn.id)
+
     await session.commit()
     await session.refresh(conn)
-    await session.refresh(current_user)
+
+    if current_user.connections_list is None:
+        current_user.connections_list = []
+
+    current_user.connections_list.append(conn.id)
+    await session.commit()
+
     return conn
+
 
 # Connection type create
 class ConnectionTypeCreate(BaseModel):
