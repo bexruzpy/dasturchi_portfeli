@@ -1,0 +1,11 @@
+KundalikCOM Auto Login Service
+Ushbu platforma raqamli asrda barcha sohalarda yengilliklar va qulayliklar yaratish uchun ishlab chiqildi. Ayni paytda bizda KundalikCOM auto login xizmatimiz mavjud.
+
+Bu nima uchun xizmat qiladi?
+Ushbu xizmatimiz desktop yani Windows 64x operatsion tizimida ishlovchi kompyuterlar uchun mo'ljallangan dastur hisoblanib, maktabning barcha foydalanuvchilarini login parollarini kiritilgan holda ularga tezda login qilib, maktab reytingini oshirish uchun mo'ljallangan.
+
+Reytingni qay tarzda ko'taradi?
+Reyting maktabda faoliyat yurutuvchilarning tizimga kunlik kirishlariga asoslanadi. Barcha foydalanuvchilar kuniga kamida 1 marta tizimga kirishi talab etiladi. Ammo, ota-onalar va o'quvchilar bunga loqayd qaramoqdalar. Bizning xizmatimiz orqali ularni avtomatik ravishda tizimga kiritish orqali reytingni oshirish mumkin.
+
+O'quvchilar va ota-onalarni avtomatik login qilish
+Xizmatimiz o'quvchilarni hamda ota-onalarni avtomatik tizimga kiritish imkoniyatini beradi. Ushbu qulay xizmat o'qituvchilarning oson foydalanishi uchun ishlab chiqilgan.

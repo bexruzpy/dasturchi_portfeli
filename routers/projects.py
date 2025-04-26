@@ -31,7 +31,6 @@ async def create_project(project: ProjectCreate, session: AsyncSession = Depends
 
     if current_user.startuplar is None:
         current_user.startuplar = []
-    current_user.startuplar.append(new_project.id)
     setattr(current_user, "startuplar", current_user.startuplar+[new_project.id])
     await session.commit()
     return new_project
