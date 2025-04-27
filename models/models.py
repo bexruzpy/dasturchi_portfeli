@@ -35,6 +35,7 @@ class Skill(Base):
         }
         if self.skill_type.be_grade:
             return {
+                "id": self.id,
                 "begrade": self.skill_type.be_grade,
                 "name": self.skill_type.name,
                 "bio": degrees[self.grade]
