@@ -119,7 +119,7 @@ async def view_public_profile(username: str, session: AsyncSession = Depends(get
         "problems": all_problems,
         "kasb": user.kasb.name,
         "connections": all_connnections,
-        "skills_list_by_id": user.skills,
+        "skills_list_by_id": user.skills or [],
         "skills": all_skills,
         "asosiy_loyiha": user.asosiy_loyiha or "",
         "hozirgi_faoliyat": user.hozirgi_faoliyat or "",
