@@ -1,2 +1,5 @@
-migrations/
+migrations/versions
 venv/
+myenv/
+
+*/__pycache__
