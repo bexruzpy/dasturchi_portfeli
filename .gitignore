@@ -1,5 +1,5 @@
 migrations/versions
 venv/
 myenv/
-
+.env
 */__pycache__
