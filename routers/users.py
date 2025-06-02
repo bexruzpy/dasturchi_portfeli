@@ -27,6 +27,7 @@ class UserUpdate(BaseModel):
     connections_list: Optional[list] = None
     birth_day: Optional[datetime] = None
     hozirgi_faoliyat: Optional[str] = None
+    experience: Optional[str] = None
 
 
 
@@ -48,6 +49,7 @@ class UserResponse(BaseModel):
     connections_list: Optional[list]
     birth_day: Optional[datetime]
     hozirgi_faoliyat: Optional[str]
+    experience: Optional[str]
 
 
     class Config:
@@ -145,6 +147,8 @@ async def update_user(
     for key, value in data.dict(exclude_unset=True).items():
         if value is not None:
             setattr(current_user, key, value)
+    if data.experience is not None:
+        current_user.experience = data.experience
 
     await session.commit()
     await session.refresh(current_user)
