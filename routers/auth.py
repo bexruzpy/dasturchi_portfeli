@@ -7,7 +7,7 @@ from datetime import datetime, timedelta
 from fastapi.security import OAuth2PasswordRequestForm
 from models.models import User
 from database.database import get_async_session
-from pydantic import BaseModel
+from pydantic import BaseModel, Field
 
 # ==== ROUTER ====
 router = APIRouter(prefix="/auth", tags=["Auth"])
@@ -40,7 +40,7 @@ class UserCreate(BaseModel):
     phone_number: str
     joylashuv: int
     kasb: int
-    birth_day: datetime
+    birth_day: datetime = Field(..., description="YYYY-MM-DD")
     hozirgi_faoliyat: str
     cariere: str
 
