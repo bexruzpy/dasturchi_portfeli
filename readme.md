@@ -1,8 +1,8 @@
 # Loyiha haqida
-misol uchun: dasturchi.projectsplatform.uz/bexruzdeveloper
+misol uchun: https://dasturchi.projectsplatform.uz/bexruzdeveloper
 shu kabi sahifani yaratish uchun hixmat qiladi.
 Hozir dasboard va umumiy frontend qilinmagan ammo backen ishga tushgan
-backend: animus.uz
+backend: https://animus.uz/docs (Swagger Ui)
 
 # Models
 users:
