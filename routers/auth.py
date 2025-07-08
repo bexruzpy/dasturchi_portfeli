@@ -40,7 +40,7 @@ class UserCreate(BaseModel):
     phone_number: str
     joylashuv: int
     kasb: int
-    birth_day: datetime = Field(..., description="YYYY-MM-DD")
+    birth_day: datetime = Field(..., example="YYYY-MM-DD")
     hozirgi_faoliyat: str
     cariere: str
 
