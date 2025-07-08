@@ -1,3 +1,10 @@
+# Loyiha haqida
+misol uchun: https://dasturchi.projectsplatform.uz/bexruzdeveloper
+shu kabi sahifani yaratish uchun hixmat qiladi.
+Hozir dasboard va umumiy frontend qilinmagan ammo backen ishga tushgan
+backend: https://animus.uz/docs (Swagger Ui)
+
+# Models
 users:
     id: int unique index
     username: str unique
