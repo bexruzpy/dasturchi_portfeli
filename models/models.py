@@ -135,12 +135,12 @@ class User(Base):
     username = Column(String, unique=True, index=True)
     password = Column(String)
     fullname = Column(String)
-    connections_list = Column(JSON)  # IDs of connections
-    loyihalar = Column(JSON)  # IDs of projects
-    startuplar = Column(JSON)  # IDs of startup-type projects
-    asosiy_loyiha = Column(String) # Loyiha nomi yoki sayt linki misol projectsplatform.uz
-    cariere = Column(Text)  # HTML content
-    solve_to_problems = Column(JSON)  # IDs of problem_and_answer
+    connections_list = Column(JSON, default=[])  # IDs of connections
+    loyihalar = Column(JSON, default=[])  # IDs of projects
+    startuplar = Column(JSON, default=[])  # IDs of startup-type projects
+    asosiy_loyiha = Column(String, default="") # Loyiha nomi yoki sayt linki misol projectsplatform.uz
+    cariere = Column(Text, default="")  # HTML content
+    solve_to_problems = Column(JSON, default=[])  # IDs of problem_and_answer
     skills = Column(JSON)  # IDs of skills
     profile_image = Column(LargeBinary)
     email = Column(String, unique=True)
